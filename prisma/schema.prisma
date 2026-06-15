@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum RecordType {
+  EXPENSE
+  INCOME
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  username     String     @unique
+  passwordHash String
+  createdAt    DateTime   @default(now())
+  categories   Category[]
+  records      Record[]
+}
+
+model Category {
+  id        Int        @id @default(autoincrement())
+  userId    Int?       // null = system default
+  name      String
+  icon      String
+  type      RecordType
+  sortOrder Int        @default(0)
+  user      User?      @relation(fields: [userId], references: [id])
+  records   Record[]
+
+  @@index([userId])
+}
+
+model Record {
+  id         Int        @id @default(autoincrement())
+  userId     Int
+  categoryId Int
+  type       RecordType
+  amount     Decimal    @db.Decimal(10, 2)
+  note       String?    @db.VarChar(255)
+  recordDate DateTime
+  createdAt  DateTime   @default(now())
+  user       User       @relation(fields: [userId], references: [id])
+  category   Category   @relation(fields: [categoryId], references: [id])
+
+  @@index([userId, recordDate])
+}
