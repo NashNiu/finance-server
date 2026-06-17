@@ -1,4 +1,4 @@
-import { IsEnum, IsString, Length } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString, Length } from 'class-validator';
 import { RecordType } from '@prisma/client';
 
 export class CreateCategoryDto {
@@ -12,4 +12,9 @@ export class CreateCategoryDto {
 
   @IsEnum(RecordType)
   type!: RecordType;
+
+  // null/omitted = first-level (一级分类); set = subcategory under this parent.
+  @IsOptional()
+  @IsInt()
+  parentId?: number;
 }

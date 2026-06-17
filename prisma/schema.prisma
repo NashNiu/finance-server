@@ -23,14 +23,18 @@ model User {
 model Category {
   id        Int        @id @default(autoincrement())
   userId    Int?       // null = system default
+  parentId  Int?       // null = first-level (一级分类); set = subcategory (二级分类)
   name      String
   icon      String
   type      RecordType
   sortOrder Int        @default(0)
   user      User?      @relation(fields: [userId], references: [id])
+  parent    Category?  @relation("CategoryChildren", fields: [parentId], references: [id])
+  children  Category[] @relation("CategoryChildren")
   records   Record[]
 
   @@index([userId])
+  @@index([parentId])
 }
 
 model Record {
