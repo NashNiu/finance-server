@@ -27,6 +27,14 @@ export class RecordsController {
     return this.service.findAll(user.id, q);
   }
 
+  @Get(':id')
+  findOne(
+    @CurrentUser() user: { id: number },
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.service.findOne(user.id, id);
+  }
+
   @Post()
   create(@CurrentUser() user: { id: number }, @Body() dto: CreateRecordDto) {
     return this.service.create(user.id, dto);
