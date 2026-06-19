@@ -40,6 +40,16 @@ export class RecordsService {
     return { items, total, page, pageSize };
   }
 
+  async findOne(userId: number, id: number) {
+    const rec = await this.prisma.record.findUnique({
+      where: { id },
+      include: { category: true },
+    });
+    if (!rec) throw new NotFoundException('record not found');
+    if (rec.userId !== userId) throw new ForbiddenException('not your record');
+    return rec;
+  }
+
   create(userId: number, dto: CreateRecordDto) {
     return this.prisma.record.create({
       data: {

@@ -51,6 +51,13 @@ describe('Records (e2e)', () => {
       .expect(201);
     const id = created.body.data.id;
 
+    const one = await request(app.getHttpServer())
+      .get(`/api/records/${id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200);
+    expect(one.body.data.id).toBe(id);
+    expect(one.body.data.category).toBeDefined();
+
     const list = await request(app.getHttpServer())
       .get('/api/records?month=2026-06')
       .set('Authorization', `Bearer ${token}`)
