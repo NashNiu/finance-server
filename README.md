@@ -2,14 +2,16 @@
 
 Backend API for a 小青账-style bookkeeping H5 app.
 
-Built with **NestJS** + **Prisma 7** + **MySQL**, providing JWT-authenticated REST endpoints for managing income/expense records, categories, and monthly statistics.
+Built with **NestJS** + **Prisma 7** + **PostgreSQL**, providing JWT-authenticated REST endpoints for managing income/expense records, categories, and monthly statistics.
+
+> Cloud deployment (Vercel + Render + Supabase): see [DEPLOY-CLOUD.md](./DEPLOY-CLOUD.md).
 
 ---
 
 ## Prerequisites
 
-- Node.js 18+
-- A running MySQL server (5.7+ or 8.x)
+- Node.js 20+
+- A running PostgreSQL server (or a Supabase project)
 
 ---
 
@@ -33,24 +35,24 @@ Required variables in `.env`:
 
 | Variable       | Example                                        | Description                        |
 |----------------|------------------------------------------------|------------------------------------|
-| `DATABASE_URL` | `mysql://root:password@localhost:3306/finance` | MySQL connection string             |
+| `DATABASE_URL` | `postgresql://postgres:postgres@localhost:5432/finance` | PostgreSQL connection string |
 | `JWT_SECRET`   | `your-secret-key`                              | Secret used to sign JWT tokens      |
 | `JWT_EXPIRES`  | `7d`                                           | Token expiry (e.g. `7d`, `24h`)    |
 | `PORT`         | `3000`                                         | Port the server listens on          |
 
-> **Note:** This project uses Prisma 7 with the `@prisma/adapter-mariadb` driver adapter. The MariaDB driver is wire-compatible with MySQL, so no MySQL-specific driver is needed.
+> **Note:** This project uses Prisma 7 with the `@prisma/adapter-pg` driver adapter (node-postgres).
 
-### 3. Run database migrations
+### 3. Create the schema
 
-Creates the `finance` database (if it does not exist) and all tables:
+Pushes the Prisma schema (tables + enum) to the database:
 
 ```bash
-npm run prisma:migrate
+npm run prisma:push
 ```
 
 ### 4. Seed default categories
 
-Inserts 10 built-in system categories (e.g. Food, Transport, Salary):
+Inserts the built-in two-level system categories (一级/二级):
 
 ```bash
 npm run prisma:seed
