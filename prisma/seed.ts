@@ -1,11 +1,11 @@
 import { PrismaClient, RecordType } from '@prisma/client';
-import { PrismaMariaDb } from '@prisma/adapter-mariadb';
+import { PrismaPg } from '@prisma/adapter-pg';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
 
 const connectionString = process.env.DATABASE_URL!;
-const adapter = new PrismaMariaDb(connectionString);
+const adapter = new PrismaPg(connectionString);
 const prisma = new PrismaClient({ adapter });
 
 interface SeedNode {
