@@ -1,0 +1,8 @@
+{
+  "buildCommand": "prisma generate && nest build",
+  "functions": {
+    "api/[...path].js": {
+      "maxDuration": 30
+    }
+  }
+}

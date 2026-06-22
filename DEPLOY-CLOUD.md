@@ -26,7 +26,10 @@
    ```
    postgresql://postgres.xxxx:[YOUR-PASSWORD]@aws-0-xxx.pooler.supabase.com:5432/postgres
    ```
-3. 末尾建议加 `?sslmode=require`。把 `[YOUR-PASSWORD]` 换成真实密码。这串就是后端的 `DATABASE_URL`。
+3. 末尾加 `?sslmode=no-verify`(**不要用 `require`**:较新的 pg 把 `require` 当成 `verify-full` 严格校验,会因 pooler 证书校验失败报 `TlsConnectionError`/500;`no-verify` 表示用 SSL 但不强制校验证书)。把 `[YOUR-PASSWORD]` 换成真实密码,并对密码里的特殊字符做 URL 编码(`%`→`%25`、`@`→`%40` 等)。这串就是后端的 `DATABASE_URL`,例如:
+   ```
+   postgresql://postgres.xxxx:%25Ef5tq.UC5dBT%40G@aws-0-xxx.pooler.supabase.com:5432/postgres?sslmode=no-verify
+   ```
 
 > 表结构和默认分类数据不用手动建——Render 构建时会自动 `prisma db push` + 跑 seed。
 
