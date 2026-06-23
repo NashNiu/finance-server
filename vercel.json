@@ -1,8 +1,9 @@
 {
   "buildCommand": "prisma generate && nest build",
   "outputDirectory": "public",
+  "rewrites": [{ "source": "/api/(.*)", "destination": "/api" }],
   "functions": {
-    "api/[...path].js": {
+    "api/index.js": {
       "maxDuration": 30
     }
   }
