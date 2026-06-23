@@ -1,5 +1,6 @@
 {
   "buildCommand": "prisma generate && nest build",
+  "outputDirectory": "public",
   "functions": {
     "api/[...path].js": {
       "maxDuration": 30
