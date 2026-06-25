@@ -15,13 +15,22 @@ export function monthRange(month: string): { gte: Date; lt: Date } {
   return { gte: new Date(y, m - 1, 1), lt: new Date(y, m, 1) };
 }
 
+export function rangeFromQuery(q: { from?: string; to?: string }): { gte: Date; lt: Date } | null {
+  if (!q.from && !q.to) return null;
+  const [fy, fm, fd] = (q.from ?? '1970-01-01').split('-').map(Number);
+  const [ty, tm, td] = (q.to ?? '9999-12-31').split('-').map(Number);
+  return { gte: new Date(fy, fm - 1, fd), lt: new Date(ty, tm - 1, td + 1) }; // to inclusive
+}
+
 @Injectable()
 export class RecordsService {
   constructor(private prisma: PrismaService) {}
 
   async findAll(userId: number, q: QueryRecordDto) {
     const where: Prisma.RecordWhereInput = { userId };
-    if (q.month) where.recordDate = monthRange(q.month);
+    const range = rangeFromQuery(q);
+    if (range) where.recordDate = range;
+    else if (q.month) where.recordDate = monthRange(q.month);
     if (q.type) where.type = q.type;
     if (q.categoryId) where.categoryId = q.categoryId;
 
